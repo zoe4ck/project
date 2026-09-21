@@ -1,567 +1,322 @@
-# ============================================================
-# 전국 고령화 지도 🌸
-# Streamlit + Leaflet
-# ============================================================
-
 import io
 import json
-import requests
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+import requests
 import streamlit as st
 import streamlit.components.v1 as components
 
 
-# ============================================================
-# 1. 페이지 설정
-# ============================================================
+# =========================================================
+# 1. 기본 설정
+# =========================================================
 
 st.set_page_config(
     page_title="전국 고령화 지도 🌸",
     page_icon="🌸",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
 
 
-# ============================================================
-# 2. 전체 디자인
-# ============================================================
+# =========================================================
+# 2. 귀여운 핑크색 디자인
+# =========================================================
 
 st.markdown(
     """
     <style>
 
-    /* -----------------------------------------------------
-       전체 화면
-    ----------------------------------------------------- */
-
+    /* 전체 배경 */
     .stApp {
-        background:
-            radial-gradient(
-                circle at 10% 5%,
-                #ffe5ef 0%,
-                transparent 25%
-            ),
-            radial-gradient(
-                circle at 95% 15%,
-                #ffd9e8 0%,
-                transparent 25%
-            ),
-            #fff7fa;
+        background: linear-gradient(
+            180deg,
+            #fff7fb 0%,
+            #fffafd 45%,
+            #fef4f8 100%
+        );
     }
 
-
-    /* 기본 여백 */
+    /* 위쪽 여백 */
     .block-container {
         padding-top: 2rem;
         padding-bottom: 3rem;
-        max-width: 1400px;
+        max-width: 1250px;
     }
 
-
-    /* -----------------------------------------------------
-       제목
-    ----------------------------------------------------- */
-
+    /* 제목 */
     .main-title {
-        background:
-            linear-gradient(
-                135deg,
-                #ff8fb7,
-                #ffb6cf
-            );
-
-        border-radius: 30px;
-
-        padding: 28px 35px;
-
-        color: white;
-
-        box-shadow:
-            0 10px 30px rgba(255, 126, 170, 0.20);
-
-        position: relative;
-
-        overflow: hidden;
-    }
-
-
-    .main-title:after {
-        content: "♡  ˚₊‧  ✧  ♡  ˚₊‧  ✧";
-
-        position: absolute;
-
-        right: 25px;
-        top: 20px;
-
-        font-size: 25px;
-
-        opacity: 0.7;
-
-        letter-spacing: 8px;
-    }
-
-
-    .main-title h1 {
-        margin: 0;
-
-        font-size: 38px;
-
+        text-align: center;
+        font-size: 42px;
         font-weight: 800;
-
-        letter-spacing: -1px;
+        color: #8f4564;
+        margin-bottom: 4px;
+        letter-spacing: -2px;
     }
 
-
-    .main-title p {
-        margin:
-            8px
-            0
-            0
-            2px;
-
-        font-size: 15px;
-
-        opacity: 0.95;
+    .sub-title {
+        text-align: center;
+        color: #a8788e;
+        font-size: 16px;
+        margin-bottom: 28px;
     }
 
-
-    /* -----------------------------------------------------
-       캐릭터 카드
-    ----------------------------------------------------- */
-
-    .friends-title {
-        margin-top: 24px;
-
-        margin-bottom: 12px;
-
-        color: #d75b88;
-
-        font-size: 17px;
-
-        font-weight: 800;
-    }
-
-
+    /* 먼작귀 친구 카드 */
     .friends {
         display: flex;
-
-        gap: 14px;
-
-        width: 100%;
+        justify-content: center;
+        gap: 18px;
+        margin: 10px 0 30px 0;
     }
-
 
     .friend-card {
-        flex: 1;
-
-        min-height: 110px;
-
-        border-radius: 24px;
-
-        padding: 15px 18px;
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 14px;
-
-        border: 2px solid rgba(
-            255,
-            255,
-            255,
-            0.9
-        );
-
-        box-shadow:
-            0 7px 20px rgba(
-                224,
-                109,
-                148,
-                0.12
-            );
-
-        transition:
-            transform 0.2s ease;
+        width: 210px;
+        min-height: 115px;
+        border-radius: 25px;
+        padding: 17px;
+        text-align: center;
+        box-shadow: 0 7px 20px rgba(170, 95, 125, 0.12);
+        border: 2px solid rgba(255,255,255,0.9);
     }
 
-
-    .friend-card:hover {
-        transform:
-            translateY(-4px);
+    .friend-card h3 {
+        margin: 3px 0 3px 0;
+        font-size: 20px;
+        color: #75425a;
     }
 
+    .friend-card p {
+        margin: 0;
+        font-size: 13px;
+        color: #a16e83;
+    }
 
-    .friend-chiikawa {
+    .chiikawa {
         background: #fff0f5;
     }
 
-
-    .friend-hachi {
-        background: #eaf7ff;
+    .hachiware {
+        background: #eef9ff;
     }
 
-
-    .friend-usagi {
-        background: #fff7dc;
+    .usagi {
+        background: #fffbe8;
     }
 
-
-    .friend-face {
-        width: 65px;
-
-        height: 65px;
-
-        min-width: 65px;
-
-        border-radius: 50%;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        font-size: 34px;
-
-        background: white;
-
-        box-shadow:
-            0 4px 10px
-            rgba(0,0,0,0.08);
-
-        border: 3px solid white;
+    .friend-emoji {
+        font-size: 36px;
     }
 
-
-    .friend-name {
-        font-size: 17px;
-
-        font-weight: 800;
-
-        color: #555;
-
-        margin-bottom: 3px;
-    }
-
-
-    .friend-text {
-        font-size: 12px;
-
-        color: #888;
-
-        line-height: 1.4;
-    }
-
-
-    /* -----------------------------------------------------
-       설명 카드
-    ----------------------------------------------------- */
-
+    /* 설명 박스 */
     .info-box {
-        margin-top: 20px;
-
-        background: white;
-
-        border-radius: 22px;
-
+        background: #ffffff;
+        border: 2px solid #ffd7e5;
+        border-radius: 20px;
         padding: 18px 22px;
+        margin: 15px 0 25px 0;
+        box-shadow: 0 5px 18px rgba(190, 105, 140, 0.08);
+    }
 
-        border:
-            1px solid #ffd9e6;
+    .info-box-title {
+        color: #b34f76;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
 
-        box-shadow:
-            0 5px 18px
-            rgba(230, 110, 150, 0.08);
-
-        color: #777;
-
-        font-size: 13px;
-
+    .info-box-text {
+        color: #765867;
+        font-size: 14px;
         line-height: 1.7;
     }
 
-
-    .info-box strong {
-        color: #df668f;
-    }
-
-
-    /* -----------------------------------------------------
-       섹션 제목
-    ----------------------------------------------------- */
-
+    /* 섹션 제목 */
     .section-title {
-        margin-top: 30px;
-
-        margin-bottom: 12px;
-
-        font-size: 22px;
-
+        color: #914664;
+        font-size: 25px;
         font-weight: 800;
-
-        color: #c94e7b;
+        margin: 25px 0 12px 0;
     }
 
-
-    /* -----------------------------------------------------
-       Streamlit metric 카드
-    ----------------------------------------------------- */
-
-    [data-testid="stMetric"] {
+    /* 통계 카드 */
+    .metric-box {
         background: white;
-
-        border-radius: 22px;
-
-        padding: 18px;
-
-        border: 1px solid #ffdce8;
-
-        box-shadow:
-            0 5px 18px
-            rgba(230, 110, 150, 0.08);
-    }
-
-
-    [data-testid="stMetricLabel"] {
-        color: #b46b86 !important;
-    }
-
-
-    [data-testid="stMetricValue"] {
-        color: #dc5f8b !important;
-    }
-
-
-    /* -----------------------------------------------------
-       표
-    ----------------------------------------------------- */
-
-    .table-title {
-        background: #ffe4ee;
-
-        border-radius: 18px 18px 0 0;
-
-        padding: 13px 18px;
-
-        color: #cf527f;
-
-        font-weight: 800;
-
-        margin-top: 10px;
-    }
-
-
-    /* -----------------------------------------------------
-       Streamlit dataframe
-    ----------------------------------------------------- */
-
-    [data-testid="stDataFrame"] {
-        border-radius: 0 0 18px 18px;
-
-        overflow: hidden;
-
-        border: 1px solid #ffdce8;
-    }
-
-
-    /* -----------------------------------------------------
-       안내문
-    ----------------------------------------------------- */
-
-    .formula {
-        margin-top: 25px;
-
-        padding: 18px;
-
         border-radius: 20px;
-
-        background:
-            linear-gradient(
-                135deg,
-                #fff0f6,
-                #fff8fb
-            );
-
-        border:
-            1px solid #ffd8e7;
-
+        padding: 18px;
         text-align: center;
-
-        color: #9c6076;
-
-        font-size: 13px;
+        border: 2px solid #ffe0ea;
+        box-shadow: 0 5px 18px rgba(190, 105, 140, 0.08);
     }
 
+    .metric-title {
+        color: #aa7188;
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
 
-    /* 모바일 */
+    .metric-value {
+        color: #9a4166;
+        font-size: 25px;
+        font-weight: 800;
+    }
+
+    /* 표 제목 */
+    .table-title {
+        background: #fff0f5;
+        color: #984565;
+        border-radius: 15px;
+        padding: 12px 16px;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    /* 수식 */
+    .formula {
+        background: #fff;
+        border: 2px dashed #f2b7ca;
+        border-radius: 18px;
+        padding: 17px;
+        text-align: center;
+        color: #795668;
+        margin-top: 25px;
+        font-size: 15px;
+    }
+
+    /* Streamlit dataframe */
+    [data-testid="stDataFrame"] {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    /* 버튼 */
+    .stButton button {
+        border-radius: 15px;
+        border: 1px solid #f2b6cb;
+        background: #fff1f6;
+        color: #914664;
+    }
+
+    /* 모바일 대응 */
     @media (max-width: 700px) {
-
-        .main-title h1 {
-            font-size: 27px;
+        .main-title {
+            font-size: 31px;
         }
 
         .friends {
             flex-direction: column;
+            align-items: center;
         }
 
         .friend-card {
-            min-height: 80px;
+            width: 90%;
         }
-
     }
 
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 
-# ============================================================
+# =========================================================
 # 3. 제목
-# ============================================================
+# =========================================================
 
 st.markdown(
-    """
-    <div class="main-title">
+    '<div class="main-title">🌸 전국 고령화 지도 🌸</div>',
+    unsafe_allow_html=True,
+)
 
-        <h1>🌸 전국 고령화 지도</h1>
-
-        <p>
-            우리나라 시군구별 65세 이상 인구 비율을
-            한눈에 살펴보아요 ♡
-        </p>
-
-    </div>
-    """,
-    unsafe_allow_html=True
+st.markdown(
+    '<div class="sub-title">우리나라 시군구별 65세 이상 인구 비율을 한눈에 살펴봐요 ♡</div>',
+    unsafe_allow_html=True,
 )
 
 
-# ============================================================
-# 4. 먼작귀 친구들 영역
-# ============================================================
-
-st.markdown(
-    '<div class="friends-title">♡ 오늘의 지도 친구들</div>',
-    unsafe_allow_html=True
-)
+# =========================================================
+# 4. 먼작귀 친구들 장식
+# =========================================================
 
 st.markdown(
     """
     <div class="friends">
 
-        <div class="friend-card friend-chiikawa">
-
-            <div class="friend-face">
-                🥺
-            </div>
-
-            <div>
-                <div class="friend-name">
-                    치이카와
-                </div>
-
-                <div class="friend-text">
-                    조심조심 전국 지도를<br>
-                    같이 살펴봐요!
-                </div>
-            </div>
-
+        <div class="friend-card chiikawa">
+            <div class="friend-emoji">🥺</div>
+            <h3>치이카와</h3>
+            <p>오늘도 함께 알아봐요 ♡</p>
         </div>
 
-
-        <div class="friend-card friend-hachi">
-
-            <div class="friend-face">
-                🩵
-            </div>
-
-            <div>
-                <div class="friend-name">
-                    하치와레
-                </div>
-
-                <div class="friend-text">
-                    하나씩 차근차근<br>
-                    지역을 확인해봐요!
-                </div>
-            </div>
-
+        <div class="friend-card hachiware">
+            <div class="friend-emoji">🩵</div>
+            <h3>하치와레</h3>
+            <p>우리나라의 고령화 현황!</p>
         </div>
 
-
-        <div class="friend-card friend-usagi">
-
-            <div class="friend-face">
-                🐰
-            </div>
-
-            <div>
-                <div class="friend-name">
-                    우사기
-                </div>
-
-                <div class="friend-text">
-                    고령화율 높은 곳은<br>
-                    어디일까? 야하!
-                </div>
-            </div>
-
+        <div class="friend-card usagi">
+            <div class="friend-emoji">🐰</div>
+            <h3>우사기</h3>
+            <p>꼼꼼하게 확인해보자!</p>
         </div>
 
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 
-# ============================================================
+# =========================================================
 # 5. 데이터 주소
-# ============================================================
+# =========================================================
 
 POPULATION_URL = (
-    "https://raw.githubusercontent.com/greatsong/modudata/"
-    "main/data/population_yearly.csv.gz"
+    "https://raw.githubusercontent.com/greatsong/modudata/main/"
+    "data/population_yearly.csv.gz"
 )
 
 GEOJSON_URL = (
-    "https://raw.githubusercontent.com/greatsong/modudata/"
-    "main/data/boundaries/sigungu_kr.geojson"
+    "https://raw.githubusercontent.com/greatsong/modudata/main/"
+    "data/boundaries/sigungu_kr.geojson"
 )
 
 
-# ============================================================
-# 6. 데이터 불러오기
-# ============================================================
+# =========================================================
+# 6. 인구 데이터 불러오기
+# =========================================================
 
 @st.cache_data
 def load_population():
+    """전국 읍면동별 연령별 인구 데이터를 불러옵니다."""
 
     response = requests.get(
         POPULATION_URL,
-        timeout=60
+        timeout=60,
     )
 
     response.raise_for_status()
 
-    return pd.read_csv(
+    data = pd.read_csv(
         io.BytesIO(response.content),
         compression="gzip",
-        dtype={
-            "코드": "string"
-        }
+        dtype={"코드": "string"},
     )
 
+    return data
+
+
+# =========================================================
+# 7. 지도 경계 데이터 불러오기
+# =========================================================
 
 @st.cache_data
 def load_geojson():
+    """전국 시군구 경계 GeoJSON을 불러옵니다."""
 
     response = requests.get(
         GEOJSON_URL,
-        timeout=60
+        timeout=60,
     )
 
     response.raise_for_status()
@@ -569,205 +324,194 @@ def load_geojson():
     return response.json()
 
 
-# ============================================================
-# 7. 고령화율 계산
-# ============================================================
+# =========================================================
+# 8. 데이터 불러오기
+# =========================================================
 
-@st.cache_data
-def calculate_aging_rate(df):
+try:
+    population_df = load_population()
+    geojson = load_geojson()
 
-    data = df.copy()
+except Exception as e:
+    st.error("데이터를 불러오는 중 오류가 발생했습니다.")
+    st.code(str(e))
+    st.stop()
 
-    # 코드 = 계산할 숫자가 아니라 행정구역 이름표
-    data["코드"] = (
-        data["코드"]
-        .astype("string")
-        .str.strip()
+
+# =========================================================
+# 9. 최신 연도 찾기
+# =========================================================
+
+population_df["연도"] = pd.to_numeric(
+    population_df["연도"],
+    errors="coerce",
+)
+
+latest_year = int(
+    population_df["연도"].dropna().max()
+)
+
+
+# =========================================================
+# 10. 코드 정리
+# =========================================================
+
+population_df["코드"] = (
+    population_df["코드"]
+    .astype("string")
+    .str.strip()
+)
+
+# 읍면동 코드는 앞의 5자리가 시군구 코드입니다.
+population_df["시군구코드"] = (
+    population_df["코드"]
+    .str[:5]
+)
+
+
+# =========================================================
+# 11. 최신 연도 데이터만 사용
+# =========================================================
+
+latest_df = population_df[
+    population_df["연도"] == latest_year
+].copy()
+
+
+# =========================================================
+# 12. 전체 인구 계산
+# =========================================================
+
+# "계_0세", "계_1세" ... 형태의 열을 찾습니다.
+total_age_columns = [
+    column
+    for column in latest_df.columns
+    if column.startswith("계_")
+]
+
+
+# 숫자로 변환
+for column in total_age_columns:
+    latest_df[column] = pd.to_numeric(
+        latest_df[column],
+        errors="coerce",
+    ).fillna(0)
+
+
+# 전체 연령 인구
+latest_df["전체인구"] = latest_df[
+    total_age_columns
+].sum(axis=1)
+
+
+# =========================================================
+# 13. 65세 이상 인구 계산
+# =========================================================
+
+elderly_columns = []
+
+for age in range(65, 100):
+    column_name = f"계_{age}세"
+
+    if column_name in latest_df.columns:
+        elderly_columns.append(column_name)
+
+
+# 100세 이상
+if "계_100세 이상" in latest_df.columns:
+    elderly_columns.append("계_100세 이상")
+
+
+# 65세 이상 인구
+latest_df["65세이상인구"] = latest_df[
+    elderly_columns
+].sum(axis=1)
+
+
+# =========================================================
+# 14. 시군구별로 합치기
+# =========================================================
+
+grouped = (
+    latest_df
+    .groupby("시군구코드", as_index=False)
+    .agg(
+        전체인구=("전체인구", "sum"),
+        고령인구=("65세이상인구", "sum"),
     )
-
-    # 앞 5자리가 시군구 코드
-    data["시군구코드"] = (
-        data["코드"]
-        .str[:5]
-    )
-
-    # 최신 연도 찾기
-    data["연도_숫자"] = pd.to_numeric(
-        data["연도"],
-        errors="coerce"
-    )
-
-    latest_year = int(
-        data["연도_숫자"].max()
-    )
-
-    data = data[
-        data["연도_숫자"] == latest_year
-    ].copy()
+)
 
 
-    # --------------------------------------------------------
-    # 전체 인구
-    # --------------------------------------------------------
+# =========================================================
+# 15. 시군구 이름과 시도 정보 가져오기
+# =========================================================
 
-    total_columns = [
-        col
-        for col in data.columns
-        if str(col).startswith("계_")
-    ]
-
-
-    # --------------------------------------------------------
-    # 65세 이상 인구
-    # --------------------------------------------------------
-
-    elderly_columns = []
-
-    for age in range(65, 100):
-
-        col = f"계_{age}세"
-
-        if col in data.columns:
-            elderly_columns.append(col)
-
-
-    if "계_100세 이상" in data.columns:
-        elderly_columns.append(
-            "계_100세 이상"
-        )
-
-
-    if len(total_columns) == 0:
-        raise ValueError(
-            "계_로 시작하는 인구 열을 찾지 못했습니다."
-        )
-
-
-    if len(elderly_columns) == 0:
-        raise ValueError(
-            "65세 이상 인구 열을 찾지 못했습니다."
-        )
-
-
-    # 숫자로 변환
-    for col in total_columns:
-
-        data[col] = pd.to_numeric(
-            data[col],
-            errors="coerce"
-        ).fillna(0)
-
-
-    for col in elderly_columns:
-
-        data[col] = pd.to_numeric(
-            data[col],
-            errors="coerce"
-        ).fillna(0)
-
-
-    # 전체 인구
-    data["전체인구"] = (
-        data[total_columns]
-        .sum(axis=1)
-    )
-
-
-    # 65세 이상
-    data["65세이상인구"] = (
-        data[elderly_columns]
-        .sum(axis=1)
-    )
-
-
-    # --------------------------------------------------------
-    # 시군구 단위로 합치기
-    # --------------------------------------------------------
-
-    result = (
-        data
-        .groupby(
+region_info = (
+    latest_df[
+        [
             "시군구코드",
-            as_index=False
-        )[
-            [
-                "전체인구",
-                "65세이상인구"
-            ]
+            "시군구",
+            "시도",
         ]
-        .sum()
+    ]
+    .drop_duplicates(
+        subset=["시군구코드"]
     )
+)
 
 
-    # 시군구 이름 / 시도
-    info = (
-        data[
-            [
-                "시군구코드",
-                "시군구",
-                "시도"
-            ]
-        ]
-        .drop_duplicates(
-            "시군구코드"
-        )
-    )
+grouped = grouped.merge(
+    region_info,
+    on="시군구코드",
+    how="left",
+)
 
 
-    result = result.merge(
-        info,
-        on="시군구코드",
-        how="left"
-    )
+# =========================================================
+# 16. 고령화율 계산
+# =========================================================
+
+grouped["고령화율"] = np.where(
+    grouped["전체인구"] > 0,
+    grouped["고령인구"]
+    / grouped["전체인구"]
+    * 100,
+    np.nan,
+)
 
 
-    # --------------------------------------------------------
-    # 고령화율
-    # --------------------------------------------------------
-
-    result["고령화율"] = np.where(
-
-        result["전체인구"] > 0,
-
-        result["65세이상인구"]
-        / result["전체인구"]
-        * 100,
-
-        np.nan
-    )
+# 숫자가 이상한 행 제거
+grouped = grouped[
+    grouped["고령화율"].notna()
+].copy()
 
 
-    result["연도"] = latest_year
+# =========================================================
+# 17. 지도용 코드 정리
+# =========================================================
 
-    return result
-
-
-# ============================================================
-# 8. 5단계 색상
-# ============================================================
-
-COLORS = [
-    "#FFF0F6",
-    "#FFD4E4",
-    "#FFB0CD",
-    "#F47FA9",
-    "#D84D80"
-]
+grouped["시군구코드"] = (
+    grouped["시군구코드"]
+    .astype(str)
+    .str.strip()
+    .str.zfill(5)
+)
 
 
-LABELS = [
-    "19% 미만",
-    "19% 이상 ~ 23% 미만",
-    "23% 이상 ~ 28% 미만",
-    "28% 이상 ~ 38% 미만",
-    "38% 이상"
-]
+# =========================================================
+# 18. 고령화율 등급
+# =========================================================
 
+# 기준
+# 19% 미만
+# 19% 이상 ~ 23% 미만
+# 23% 이상 ~ 28% 미만
+# 28% 이상 ~ 38% 미만
+# 38% 이상
 
 def get_grade(rate):
-
     if pd.isna(rate):
-        return None
+        return 0
 
     if rate < 19:
         return 0
@@ -784,145 +528,121 @@ def get_grade(rate):
     return 4
 
 
-# ============================================================
-# 9. 지도용 GeoJSON
-# ============================================================
+grouped["등급"] = grouped["고령화율"].apply(
+    get_grade
+)
 
-def make_map_geojson(
-    geojson,
-    population
-):
 
+# =========================================================
+# 19. 지도에 넣을 GeoJSON 만들기
+# =========================================================
+
+def make_map_geojson(original_geojson, region_data):
+    """시군구 코드로 인구 데이터를 지도 경계와 연결합니다."""
+
+    result = {
+        "type": "FeatureCollection",
+        "features": [],
+    }
+
+    # 빠른 검색을 위해 딕셔너리 생성
     data_dict = {}
 
-    for _, row in population.iterrows():
+    for _, row in region_data.iterrows():
 
-        code = (
-            str(row["시군구코드"])
-            .strip()
-            .zfill(5)
-        )
+        code = str(
+            row["시군구코드"]
+        ).strip().zfill(5)
 
         data_dict[code] = {
-
-            "시군구":
-                str(row["시군구"]),
-
-            "시도":
-                str(row["시도"]),
-
-            "고령화율":
-                None
-                if pd.isna(row["고령화율"])
-                else float(row["고령화율"])
+            "시군구": str(row["시군구"]),
+            "시도": str(row["시도"]),
+            "고령화율": float(row["고령화율"]),
+            "등급": int(row["등급"]),
         }
 
+    # GeoJSON 각각의 지역에 데이터 붙이기
+    for feature in original_geojson["features"]:
 
-    result = json.loads(
-        json.dumps(
-            geojson,
-            ensure_ascii=False
-        )
-    )
-
-
-    for feature in result["features"]:
-
-        props = feature.get(
+        properties = feature.get(
             "properties",
-            {}
+            {},
         )
 
-        code = (
-            str(
-                props.get(
-                    "코드",
-                    ""
-                )
-            )
-            .strip()
-            .zfill(5)
+        code = properties.get("코드")
+
+        if code is None:
+            code = properties.get("code")
+
+        if code is None:
+            continue
+
+        code = str(code).strip().zfill(5)
+
+        if code not in data_dict:
+            continue
+
+        new_feature = {
+            "type": feature["type"],
+            "geometry": feature["geometry"],
+            "properties": {
+                "코드": code,
+                "시군구": data_dict[code]["시군구"],
+                "시도": data_dict[code]["시도"],
+                "고령화율": data_dict[code]["고령화율"],
+                "등급": data_dict[code]["등급"],
+            },
+        }
+
+        result["features"].append(
+            new_feature
         )
-
-
-        info = data_dict.get(code)
-
-
-        if info:
-
-            props["시군구"] = info[
-                "시군구"
-            ]
-
-            props["시도"] = info[
-                "시도"
-            ]
-
-            props["고령화율"] = info[
-                "고령화율"
-            ]
-
-            props["등급"] = get_grade(
-                info["고령화율"]
-            )
-
-        else:
-
-            props["고령화율"] = None
-
-            props["등급"] = None
-
 
     return result
 
 
-# ============================================================
-# 10. Leaflet 지도
-# ============================================================
-
-def create_map_html(
-    map_geojson
-):
-
-    geojson_text = json.dumps(
-        map_geojson,
-        ensure_ascii=False
-    )
-
-    colors_text = json.dumps(
-        COLORS
-    )
-
-    labels_text = json.dumps(
-        LABELS,
-        ensure_ascii=False
-    )
+map_geojson = make_map_geojson(
+    geojson,
+    grouped,
+)
 
 
-    html = f"""
+# =========================================================
+# 20. 지도 색상
+# =========================================================
+
+MAP_COLORS = [
+    "#FFF0F6",
+    "#FFD4E4",
+    "#FFB0CD",
+    "#F47FA9",
+    "#D84D80",
+]
+
+
+# =========================================================
+# 21. 지도 HTML 만들기
+# =========================================================
+
+geojson_text = json.dumps(
+    map_geojson,
+    ensure_ascii=False,
+)
+
+
+map_html = f"""
 <!DOCTYPE html>
 
-<html lang="ko">
+<html>
 
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width,
-      initial-scale=1.0">
-
-
 <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 />
-
-
-<script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
-
 
 <style>
 
@@ -930,126 +650,68 @@ html,
 body {{
     margin: 0;
     padding: 0;
-    background: #fff7fa;
+    width: 100%;
+    height: 100%;
 }}
-
 
 #map {{
     width: 100%;
-    height: 700px;
-
-    background:
-        radial-gradient(
-            circle at 50% 40%,
-            #fff4f8,
-            #fffafb
-        );
-
-    border-radius: 26px;
-
-    overflow: hidden;
+    height: 670px;
+    border-radius: 22px;
+    border: 3px solid #ffd8e6;
+    box-shadow: 0 6px 20px rgba(180, 90, 125, 0.12);
 }}
 
+.leaflet-container {{
+    font-family: Arial, sans-serif;
+    background: #fffafd;
+}}
 
-/* 범례 */
+.info {{
+    background: white;
+    padding: 12px 15px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(150, 80, 110, 0.18);
+    border: 1px solid #ffd5e4;
+    color: #70485a;
+    line-height: 1.6;
+}}
+
+.info-title {{
+    font-weight: bold;
+    color: #9b4567;
+    margin-bottom: 4px;
+}}
 
 .legend {{
-    background: rgba(
-        255,
-        255,
-        255,
-        0.96
-    );
-
-    padding: 14px 16px;
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 5px 18px
-        rgba(205, 82, 124, 0.18);
-
-    border:
-        1px solid #ffd9e7;
-
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        sans-serif;
-
-    color: #777;
-
-    font-size: 12px;
+    background: white;
+    padding: 12px 14px;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(150, 80, 110, 0.18);
+    border: 1px solid #ffd5e4;
+    color: #70485a;
 }}
-
 
 .legend-title {{
-    color: #ce5a84;
-
-    font-weight: 800;
-
-    font-size: 14px;
-
-    margin-bottom: 7px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #9b4567;
 }}
-
 
 .legend-item {{
     display: flex;
-
     align-items: center;
-
-    margin: 4px 0;
-
-    white-space: nowrap;
+    margin: 5px 0;
+    font-size: 12px;
 }}
-
 
 .legend-color {{
-    width: 18px;
-
-    height: 18px;
-
-    border-radius: 6px;
-
+    width: 19px;
+    height: 19px;
+    border-radius: 5px;
     margin-right: 7px;
-
-    border:
-        1px solid
-        rgba(190,100,130,0.15);
+    border: 1px solid rgba(100,100,100,0.15);
 }}
-
-
-/* 마우스오버 */
-
-.leaflet-tooltip {{
-    background: white;
-
-    border:
-        1px solid #ffbfd4;
-
-    border-radius: 13px;
-
-    box-shadow:
-        0 5px 15px
-        rgba(205,82,124,0.18);
-
-    color: #666;
-
-    padding:
-        8px 11px;
-
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        sans-serif;
-}}
-
-
-.leaflet-tooltip-top:before {{
-    border-top-color: #ffbfd4;
-}}
-
 
 </style>
 
@@ -1058,343 +720,210 @@ body {{
 
 <body>
 
-
 <div id="map"></div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 
 <script>
 
-
-const mapData = {geojson_text};
-
-const colors = {colors_text};
-
-const labels = {labels_text};
+const map = L.map("map", {{
+    zoomControl: true,
+    scrollWheelZoom: true
+}});
 
 
-const map = L.map(
-    "map",
-    {{
-        zoomControl: true,
-        attributionControl: false
-    }}
-);
+// 우리나라 중심 부근
+map.setView([36.2, 127.8], 7);
 
 
-/* 색상 */
+const geojsonData = {geojson_text};
+
+
+const colors = [
+    "#FFF0F6",
+    "#FFD4E4",
+    "#FFB0CD",
+    "#F47FA9",
+    "#D84D80"
+];
+
+
+const labels = [
+    "19% 미만",
+    "19% 이상 ~ 23% 미만",
+    "23% 이상 ~ 28% 미만",
+    "28% 이상 ~ 38% 미만",
+    "38% 이상"
+];
+
 
 function getColor(grade) {{
-
-    if (
-        grade === null ||
-        grade === undefined ||
-        grade === ""
-    ) {{
-        return "#eeeeee";
-    }}
-
-    return colors[
-        Number(grade)
-    ];
+    return colors[grade] || "#eeeeee";
 }}
 
 
-/* 마우스를 올렸을 때 */
+function style(feature) {{
 
-function highlightFeature(e) {{
+    return {{
+        fillColor: getColor(
+            feature.properties.등급
+        ),
 
-    const layer = e.target;
+        weight: 1,
 
-    layer.setStyle({{
-        weight: 2.2,
-        color: "#b83f6c",
-        fillOpacity: 1
-    }});
+        opacity: 1,
 
-    layer.bringToFront();
+        color: "#ffffff",
+
+        fillOpacity: 0.82
+    }};
 }}
 
-
-/* 마우스가 빠졌을 때 */
-
-function resetHighlight(e) {{
-
-    geojsonLayer.resetStyle(
-        e.target
-    );
-}}
-
-
-/* 지역 정보 */
 
 function onEachFeature(
     feature,
     layer
 ) {{
 
-    const p =
-        feature.properties || {{}};
+    const p = feature.properties;
 
 
-    const sigungu =
-        p["시군구"]
-        || "정보 없음";
+    const tooltipText =
+        "<b>♡ " +
+        p.시군구 +
+        "</b><br>" +
 
+        p.시도 +
+        "<br>" +
 
-    const sido =
-        p["시도"]
-        || "정보 없음";
-
-
-    const rate =
-        p["고령화율"];
-
-
-    let rateText =
-        "자료 없음";
-
-
-    if (
-        rate !== null &&
-        rate !== undefined &&
-        !isNaN(rate)
-    ) {{
-
-        rateText =
-            Number(rate)
-            .toFixed(2)
-            + "%";
-
-    }}
+        "고령화율 : " +
+        Number(p.고령화율).toFixed(2) +
+        "%";
 
 
     layer.bindTooltip(
-
-        "<b>♡ "
-        + sigungu
-        + "</b>"
-        + "<br>"
-        + sido
-        + "<br>"
-        + "고령화율 : "
-        + rateText,
-
+        tooltipText,
         {{
             sticky: true,
             direction: "top"
         }}
-
     );
 
 
     layer.on({{
 
-        mouseover:
-            highlightFeature,
+        mouseover: function(e) {{
 
-        mouseout:
-            resetHighlight
+            e.target.setStyle({{
+                weight: 3,
+                color: "#a63e68",
+                fillOpacity: 1
+            }});
+
+            e.target.bringToFront();
+        }},
+
+
+        mouseout: function(e) {{
+
+            e.target.setStyle({{
+                weight: 1,
+                color: "#ffffff",
+                fillOpacity: 0.82
+            }});
+
+        }}
 
     }});
 
 }}
 
 
-/* 지도 */
-
-const geojsonLayer =
-    L.geoJSON(
-
-        mapData,
-
-        {{
-
-            style:
-                function(feature) {{
-
-                    const grade =
-                        feature
-                        .properties
-                        ["등급"];
+const geoLayer = L.geoJSON(
+    geojsonData,
+    {{
+        style: style,
+        onEachFeature: onEachFeature
+    }}
+).addTo(map);
 
 
-                    return {{
-
-                        fillColor:
-                            getColor(
-                                grade
-                            ),
-
-                        weight:
-                            0.7,
-
-                        color:
-                            "#FFFFFF",
-
-                        fillOpacity:
-                            0.92
-
-                    }};
-
-                }},
-
-
-            onEachFeature:
-                onEachFeature
-
-        }}
-
-    ).addTo(map);
-
-
-/* 대한민국 전체가 보이게 */
-
-const bounds =
-    geojsonLayer.getBounds();
-
-
-if (bounds.isValid()) {{
-
+// 지도에 데이터가 잘 들어갔다면
+// 모든 지역이 보이도록 화면을 맞춥니다.
+if (geoLayer.getBounds().isValid()) {{
     map.fitBounds(
-        bounds,
+        geoLayer.getBounds(),
         {{
-            padding:
-                [15, 15]
+            padding: [15, 15]
         }}
     );
-
 }}
 
 
-/* 범례 */
+// =====================================================
+// 범례
+// =====================================================
 
-const legend =
-    L.control({{
-        position:
-            "bottomright"
-    }});
-
-
-legend.onAdd =
-    function() {{
-
-        const div =
-            L.DomUtil.create(
-                "div",
-                "legend"
-            );
+const legend = L.control({{
+    position: "bottomright"
+}});
 
 
-        let html =
-            '<div class="legend-title">'
-            + '♡ 고령화율'
-            + '</div>';
+legend.onAdd = function() {{
+
+    const div = L.DomUtil.create(
+        "div",
+        "legend"
+    );
 
 
-        for (
-            let i = 0;
-            i < labels.length;
-            i++
-        ) {{
-
-            html +=
-
-                '<div class="legend-item">'
-
-                + '<span '
-                + 'class="legend-color" '
-                + 'style="background:'
-                + colors[i]
-                + '"></span>'
-
-                + labels[i]
-
-                + '</div>';
-        }}
+    div.innerHTML =
+        '<div class="legend-title">고령화율</div>';
 
 
-        html +=
+    for (
+        let i = 0;
+        i < colors.length;
+        i++
+    ) {{
 
-            '<div class="legend-item">'
+        div.innerHTML +=
+            '<div class="legend-item">' +
 
-            + '<span '
-            + 'class="legend-color" '
-            + 'style="background:#eeeeee">'
-            + '</span>'
+            '<div class="legend-color" ' +
+            'style="background:' +
+            colors[i] +
+            '"></div>' +
 
-            + '자료 없음'
+            labels[i] +
 
-            + '</div>';
-
-
-        div.innerHTML =
-            html;
+            '</div>';
+    }}
 
 
-        return div;
-    }};
+    return div;
+}};
 
 
 legend.addTo(map);
 
-
 </script>
-
 
 </body>
 
 </html>
 """
 
-    return html
 
+# =========================================================
+# 22. 지도 제목
+# =========================================================
 
-# ============================================================
-# 11. 데이터 실행
-# ============================================================
-
-try:
-
-    with st.spinner(
-        "🌸 전국 데이터를 가져오는 중..."
-    ):
-
-        population_df =
-            load_population()
-
-        geojson =
-            load_geojson()
-
-        sigungu_df =
-            calculate_aging_rate(
-                population_df
-            )
-
-        map_geojson =
-            make_map_geojson(
-                geojson,
-                sigungu_df
-            )
-
-except Exception as e:
-
-    st.error(
-        "앗! 데이터를 불러오는 중 문제가 생겼어요 🥺"
-    )
-
-    st.code(
-        f"{type(e).__name__}: {e}"
-    )
-
-    st.stop()
-
-
-# ============================================================
-# 12. 최신 연도
-# ============================================================
-
-latest_year = int(
-    sigungu_df["연도"].iloc[0]
+st.markdown(
+    '<div class="section-title">🗺️ 시군구별 고령화율 지도</div>',
+    unsafe_allow_html=True,
 )
 
 
@@ -1402,294 +931,315 @@ st.markdown(
     f"""
     <div class="info-box">
 
-    🌷 <strong>{latest_year}년 최신 자료</strong>를
-    기준으로 계산했어요.<br>
+        <div class="info-box-title">
+            🌷 {latest_year}년 기준
+        </div>
 
-    읍·면·동 인구를 시군구별로 합친 뒤
-    <strong>65세 이상 인구 ÷ 전체 인구 × 100</strong>
-    으로 고령화율을 계산했습니다.<br>
-
-    지도는 지역 이름이 아니라
-    <strong>시군구 코드 앞 5자리</strong>를 이용해 연결했습니다.
+        <div class="info-box-text">
+            각 시군구의 전체 인구 중
+            <b>65세 이상 인구가 차지하는 비율</b>을
+            색으로 나타낸 지도예요.
+            <br>
+            지역을 마우스로 올리면 시군구 이름과
+            고령화율을 확인할 수 있어요 ♡
+        </div>
 
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 
-# ============================================================
-# 13. 숫자 요약
-# ============================================================
-
-st.markdown(
-    '<div class="section-title">🌷 한눈에 보기</div>',
-    unsafe_allow_html=True
-)
-
-
-total_regions = len(
-    geojson.get(
-        "features",
-        []
-    )
-)
-
-
-valid_regions = (
-    sigungu_df[
-        sigungu_df["고령화율"].notna()
-    ]
-    .shape[0]
-)
-
-
-highest_rate = (
-    sigungu_df["고령화율"]
-    .max()
-)
-
-
-lowest_rate = (
-    sigungu_df["고령화율"]
-    .min()
-)
-
-
-c1, c2, c3, c4 = st.columns(4)
-
-
-with c1:
-
-    st.metric(
-        "🗺️ 지도 시군구",
-        f"{total_regions}개"
-    )
-
-
-with c2:
-
-    st.metric(
-        "💗 분석 지역",
-        f"{valid_regions}개"
-    )
-
-
-with c3:
-
-    st.metric(
-        "🎀 가장 높은 고령화율",
-        f"{highest_rate:.1f}%"
-    )
-
-
-with c4:
-
-    st.metric(
-        "🌸 가장 낮은 고령화율",
-        f"{lowest_rate:.1f}%"
-    )
-
-
-# ============================================================
-# 14. 지도
-# ============================================================
-
-st.markdown(
-    '<div class="section-title">🗺️ 전국 시군구 고령화율</div>',
-    unsafe_allow_html=True
-)
-
-
-map_html = create_map_html(
-    map_geojson
-)
-
+# =========================================================
+# 23. 지도 표시
+# =========================================================
 
 components.html(
     map_html,
-    height=720,
-    scrolling=False
+    height=700,
+    scrolling=False,
 )
 
 
-# ============================================================
-# 15. 순위 계산
-# ============================================================
-
-ranking = (
-    sigungu_df[
-        sigungu_df["고령화율"].notna()
-    ]
-    .copy()
-)
-
-
-# 높은 곳
-
-top10 = (
-    ranking
-    .sort_values(
-        "고령화율",
-        ascending=False
-    )
-    .head(10)
-    .copy()
-)
-
-
-top10["순위"] = range(
-    1,
-    len(top10) + 1
-)
-
-
-top10["고령화율"] = (
-    top10["고령화율"]
-    .map(
-        lambda x:
-            f"{x:.2f}%"
-    )
-)
-
-
-top10 = top10[
-    [
-        "순위",
-        "시도",
-        "시군구",
-        "고령화율"
-    ]
-]
-
-
-# 낮은 곳
-
-bottom10 = (
-    ranking
-    .sort_values(
-        "고령화율",
-        ascending=True
-    )
-    .head(10)
-    .copy()
-)
-
-
-bottom10["순위"] = range(
-    1,
-    len(bottom10) + 1
-)
-
-
-bottom10["고령화율"] = (
-    bottom10["고령화율"]
-    .map(
-        lambda x:
-            f"{x:.2f}%"
-    )
-)
-
-
-bottom10 = bottom10[
-    [
-        "순위",
-        "시도",
-        "시군구",
-        "고령화율"
-    ]
-]
-
-
-# ============================================================
-# 16. 순위 표
-# ============================================================
+# =========================================================
+# 24. 주요 통계
+# =========================================================
 
 st.markdown(
-    '<div class="section-title">💗 고령화율 랭킹</div>',
-    unsafe_allow_html=True
+    '<div class="section-title">📊 전체 현황</div>',
+    unsafe_allow_html=True,
+)
+
+
+total_regions = len(map_geojson["features"])
+
+valid_regions = len(grouped)
+
+max_rate = grouped["고령화율"].max()
+
+min_rate = grouped["고령화율"].min()
+
+
+col1, col2, col3, col4 = st.columns(4)
+
+
+with col1:
+
+    st.markdown(
+        f"""
+        <div class="metric-box">
+
+            <div class="metric-title">
+                지도에 표시된 시군구
+            </div>
+
+            <div class="metric-value">
+                {total_regions}개
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+with col2:
+
+    st.markdown(
+        f"""
+        <div class="metric-box">
+
+            <div class="metric-title">
+                분석 가능한 시군구
+            </div>
+
+            <div class="metric-value">
+                {valid_regions}개
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+with col3:
+
+    st.markdown(
+        f"""
+        <div class="metric-box">
+
+            <div class="metric-title">
+                가장 높은 고령화율
+            </div>
+
+            <div class="metric-value">
+                {max_rate:.2f}%
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+with col4:
+
+    st.markdown(
+        f"""
+        <div class="metric-box">
+
+            <div class="metric-title">
+                가장 낮은 고령화율
+            </div>
+
+            <div class="metric-value">
+                {min_rate:.2f}%
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+# =========================================================
+# 25. 상위 / 하위 10개 지역
+# =========================================================
+
+st.markdown(
+    '<div class="section-title">🔎 지역별 비교</div>',
+    unsafe_allow_html=True,
+)
+
+
+top10 = (
+    grouped
+    .sort_values(
+        "고령화율",
+        ascending=False,
+    )
+    .head(10)
+    .copy()
+)
+
+
+bottom10 = (
+    grouped
+    .sort_values(
+        "고령화율",
+        ascending=True,
+    )
+    .head(10)
+    .copy()
+)
+
+
+# 보기 좋은 표 만들기
+top10_table = top10[
+    [
+        "시도",
+        "시군구",
+        "전체인구",
+        "고령인구",
+        "고령화율",
+    ]
+].copy()
+
+
+bottom10_table = bottom10[
+    [
+        "시도",
+        "시군구",
+        "전체인구",
+        "고령인구",
+        "고령화율",
+    ]
+].copy()
+
+
+top10_table.columns = [
+    "시도",
+    "시군구",
+    "전체 인구",
+    "65세 이상 인구",
+    "고령화율(%)",
+]
+
+
+bottom10_table.columns = [
+    "시도",
+    "시군구",
+    "전체 인구",
+    "65세 이상 인구",
+    "고령화율(%)",
+]
+
+
+top10_table["고령화율(%)"] = (
+    top10_table["고령화율(%)"]
+    .round(2)
+)
+
+
+bottom10_table["고령화율(%)"] = (
+    bottom10_table["고령화율(%)"]
+    .round(2)
 )
 
 
 left, right = st.columns(2)
 
 
+# ---------------------------------------------------------
+# 고령화율 높은 지역
+# ---------------------------------------------------------
+
 with left:
 
     st.markdown(
         """
         <div class="table-title">
-            🌸 고령화율 높은 곳 TOP 10
+            🌸 고령화율이 높은 지역 TOP 10
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.dataframe(
-        top10,
+        top10_table,
         use_container_width=True,
-        hide_index=True
+        hide_index=True,
     )
 
+
+# ---------------------------------------------------------
+# 고령화율 낮은 지역
+# ---------------------------------------------------------
 
 with right:
 
     st.markdown(
         """
         <div class="table-title">
-            🩷 고령화율 낮은 곳 TOP 10
+            🩷 고령화율이 낮은 지역 TOP 10
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.dataframe(
-        bottom10,
+        bottom10_table,
         use_container_width=True,
-        hide_index=True
+        hide_index=True,
     )
 
 
-# ============================================================
-# 17. 하단 설명
-# ============================================================
+# =========================================================
+# 26. 계산 방법
+# =========================================================
 
 st.markdown(
-    f"""
+    """
     <div class="formula">
 
-        ♡ <strong>고령화율</strong>
-        =
+        <b>🌷 고령화율 계산 방법</b>
+        <br><br>
+
+        고령화율(%) =
+        <b>
         65세 이상 인구 ÷ 전체 인구 × 100
+        </b>
 
         <br><br>
 
-        🌷 색상 기준 :
-        <strong>
-        19% · 23% · 28% · 38%
-        </strong>
-
-        <br>
-
-        ✨ 낮은 지역은 연하게,
-        높은 지역은 진하게 표시됩니다.
+        <span style="font-size:13px;">
+        ※ 인구 데이터는 읍·면·동 단위 자료를
+        시군구 코드 기준으로 합산하여 계산했습니다.
+        </span>
 
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
+
+# =========================================================
+# 27. 마지막 안내
+# =========================================================
 
 st.markdown(
     """
     <div style="
         text-align:center;
-        margin-top:25px;
-        color:#d59aae;
-        font-size:12px;
+        color:#b08094;
+        margin-top:28px;
+        font-size:13px;
     ">
-        made with ♡ · 전국 고령화 지도
+        🌸 전국 고령화 현황을 귀엽게 살펴보는 데이터 지도 🌸
+        <br>
+        Chiikawa friends와 함께 알아봐요 ♡
     </div>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
