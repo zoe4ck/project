@@ -21,263 +21,269 @@ st.set_page_config(
 
 
 # =========================================================
-# 2. 핑크핑크한 디자인
+# 2. 화면 디자인
 # =========================================================
 
 st.markdown(
     """
-<style>
-.stApp {
-    background: linear-gradient(180deg, #fff8fb 0%, #fffafd 50%, #fff4f8 100%);
-}
+    <style>
+    .stApp {
+        background: linear-gradient(
+            180deg,
+            #fff8fb 0%,
+            #fffafd 50%,
+            #fff4f8 100%
+        );
+    }
 
-.block-container {
-    max-width: 1250px;
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-}
+    .block-container {
+        max-width: 1250px;
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+    }
 
-.main-title {
-    text-align: center;
-    font-size: 42px;
-    font-weight: 800;
-    color: #8f4564;
-    margin-bottom: 4px;
-    letter-spacing: -2px;
-}
-
-.sub-title {
-    text-align: center;
-    color: #a8788e;
-    font-size: 16px;
-    margin-bottom: 28px;
-}
-
-.friends {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    margin: 10px 0 30px 0;
-}
-
-.friend-card {
-    width: 210px;
-    min-height: 115px;
-    border-radius: 25px;
-    padding: 17px;
-    text-align: center;
-    box-shadow: 0 7px 20px rgba(170, 95, 125, 0.12);
-    border: 2px solid rgba(255,255,255,0.9);
-}
-
-.friend-card h3 {
-    margin: 3px 0 3px 0;
-    font-size: 20px;
-    color: #75425a;
-}
-
-.friend-card p {
-    margin: 0;
-    font-size: 13px;
-    color: #a16e83;
-}
-
-.chiikawa {
-    background: #fff0f5;
-}
-
-.hachiware {
-    background: #eef9ff;
-}
-
-.usagi {
-    background: #fffbe8;
-}
-
-.friend-emoji {
-    font-size: 36px;
-}
-
-.info-box {
-    background: #ffffff;
-    border: 2px solid #ffd7e5;
-    border-radius: 20px;
-    padding: 18px 22px;
-    margin: 15px 0 25px 0;
-    box-shadow: 0 5px 18px rgba(190, 105, 140, 0.08);
-}
-
-.info-box-title {
-    color: #b34f76;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 7px;
-}
-
-.info-box-text {
-    color: #765867;
-    font-size: 14px;
-    line-height: 1.7;
-}
-
-.section-title {
-    color: #914664;
-    font-size: 25px;
-    font-weight: 800;
-    margin: 25px 0 12px 0;
-}
-
-.metric-box {
-    background: white;
-    border-radius: 20px;
-    padding: 18px;
-    text-align: center;
-    border: 2px solid #ffe0ea;
-    box-shadow: 0 5px 18px rgba(190, 105, 140, 0.08);
-}
-
-.metric-title {
-    color: #aa7188;
-    font-size: 13px;
-    margin-bottom: 6px;
-}
-
-.metric-value {
-    color: #9a4166;
-    font-size: 25px;
-    font-weight: 800;
-}
-
-.table-title {
-    background: #fff0f5;
-    color: #984565;
-    border-radius: 15px;
-    padding: 12px 16px;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-.formula {
-    background: #fff;
-    border: 2px dashed #f2b7ca;
-    border-radius: 18px;
-    padding: 17px;
-    text-align: center;
-    color: #795668;
-    margin-top: 25px;
-    font-size: 15px;
-}
-
-.pyramid-box {
-    background: #ffffff;
-    border: 2px solid #ffd7e5;
-    border-radius: 22px;
-    padding: 18px 20px 22px 20px;
-    box-shadow: 0 5px 18px rgba(190, 105, 140, 0.08);
-}
-
-.pyramid-header {
-    display: grid;
-    grid-template-columns: 1fr 90px 1fr;
-    align-items: center;
-    margin-bottom: 10px;
-    font-weight: 700;
-    font-size: 13px;
-}
-
-.pyramid-header .male-title {
-    text-align: right;
-    color: #7e9bc7;
-    padding-right: 15px;
-}
-
-.pyramid-header .age-title {
-    text-align: center;
-    color: #927082;
-}
-
-.pyramid-header .female-title {
-    text-align: left;
-    color: #d9779b;
-    padding-left: 15px;
-}
-
-.pyramid-row {
-    display: grid;
-    grid-template-columns: 1fr 90px 1fr;
-    align-items: center;
-    min-height: 34px;
-}
-
-.pyramid-side {
-    height: 24px;
-    display: flex;
-    align-items: center;
-}
-
-.male-side {
-    justify-content: flex-end;
-}
-
-.female-side {
-    justify-content: flex-start;
-}
-
-.male-bar {
-    height: 24px;
-    background: #c7d8f0;
-    border-radius: 7px 0 0 7px;
-}
-
-.female-bar {
-    height: 24px;
-    background: #f4bfd2;
-    border-radius: 0 7px 7px 0;
-}
-
-.pyramid-age {
-    text-align: center;
-    color: #765b69;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.pyramid-number {
-    font-size: 10px;
-    color: #9b8290;
-    margin: 0 5px;
-    white-space: nowrap;
-}
-
-.pyramid-footer {
-    text-align: center;
-    color: #a27d8d;
-    font-size: 12px;
-    margin-top: 14px;
-}
-
-@media (max-width: 700px) {
     .main-title {
-        font-size: 31px;
+        text-align: center;
+        font-size: 42px;
+        font-weight: 800;
+        color: #8f4564;
+        margin-bottom: 4px;
+        letter-spacing: -2px;
+    }
+
+    .sub-title {
+        text-align: center;
+        color: #a8788e;
+        font-size: 16px;
+        margin-bottom: 28px;
     }
 
     .friends {
-        flex-direction: column;
-        align-items: center;
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        margin: 10px 0 30px 0;
     }
 
     .friend-card {
-        width: 90%;
+        width: 210px;
+        min-height: 115px;
+        border-radius: 25px;
+        padding: 17px;
+        text-align: center;
+        box-shadow: 0 7px 20px rgba(170, 95, 125, 0.12);
+        border: 2px solid rgba(255, 255, 255, 0.9);
+    }
+
+    .friend-card h3 {
+        margin: 3px 0 3px 0;
+        font-size: 20px;
+        color: #75425a;
+    }
+
+    .friend-card p {
+        margin: 0;
+        font-size: 13px;
+        color: #a16e83;
+    }
+
+    .chiikawa {
+        background: #fff0f5;
+    }
+
+    .hachiware {
+        background: #eef9ff;
+    }
+
+    .usagi {
+        background: #fffbe8;
+    }
+
+    .friend-emoji {
+        font-size: 36px;
+    }
+
+    .info-box {
+        background: #ffffff;
+        border: 2px solid #ffd7e5;
+        border-radius: 20px;
+        padding: 18px 22px;
+        margin: 15px 0 25px 0;
+        box-shadow: 0 5px 18px rgba(190, 105, 140, 0.08);
+    }
+
+    .info-box-title {
+        color: #b34f76;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
+
+    .info-box-text {
+        color: #765867;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .section-title {
+        color: #914664;
+        font-size: 25px;
+        font-weight: 800;
+        margin: 25px 0 12px 0;
+    }
+
+    .metric-box {
+        background: white;
+        border-radius: 20px;
+        padding: 18px;
+        text-align: center;
+        border: 2px solid #ffe0ea;
+        box-shadow: 0 5px 18px rgba(190, 105, 140, 0.08);
+    }
+
+    .metric-title {
+        color: #aa7188;
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .metric-value {
+        color: #9a4166;
+        font-size: 25px;
+        font-weight: 800;
+    }
+
+    .table-title {
+        background: #fff0f5;
+        color: #984565;
+        border-radius: 15px;
+        padding: 12px 16px;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .formula {
+        background: #fff;
+        border: 2px dashed #f2b7ca;
+        border-radius: 18px;
+        padding: 17px;
+        text-align: center;
+        color: #795668;
+        margin-top: 25px;
+        font-size: 15px;
+    }
+
+    .pyramid-box {
+        background: #ffffff;
+        border: 2px solid #ffd7e5;
+        border-radius: 22px;
+        padding: 18px 20px 22px 20px;
+        box-shadow: 0 5px 18px rgba(190, 105, 140, 0.08);
     }
 
     .pyramid-header,
     .pyramid-row {
-        grid-template-columns: 1fr 65px 1fr;
+        display: grid;
+        grid-template-columns: 1fr 100px 1fr;
+        align-items: center;
     }
-}
-</style>
-""",
+
+    .pyramid-header {
+        margin-bottom: 10px;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .male-title {
+        text-align: right;
+        color: #7e9bc7;
+        padding-right: 15px;
+    }
+
+    .age-title {
+        text-align: center;
+        color: #927082;
+    }
+
+    .female-title {
+        text-align: left;
+        color: #d9779b;
+        padding-left: 15px;
+    }
+
+    .pyramid-row {
+        min-height: 34px;
+    }
+
+    .pyramid-side {
+        height: 24px;
+        display: flex;
+        align-items: center;
+    }
+
+    .male-side {
+        justify-content: flex-end;
+    }
+
+    .female-side {
+        justify-content: flex-start;
+    }
+
+    .male-bar {
+        height: 24px;
+        background: #c7d8f0;
+        border-radius: 7px 0 0 7px;
+    }
+
+    .female-bar {
+        height: 24px;
+        background: #f4bfd2;
+        border-radius: 0 7px 7px 0;
+    }
+
+    .pyramid-age {
+        text-align: center;
+        color: #765b69;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .pyramid-number {
+        font-size: 10px;
+        color: #9b8290;
+        margin: 0 5px;
+        white-space: nowrap;
+    }
+
+    .pyramid-footer {
+        text-align: center;
+        color: #a27d8d;
+        font-size: 12px;
+        margin-top: 14px;
+    }
+
+    @media (max-width: 700px) {
+        .main-title {
+            font-size: 31px;
+        }
+
+        .friends {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .friend-card {
+            width: 90%;
+        }
+
+        .pyramid-header,
+        .pyramid-row {
+            grid-template-columns: 1fr 65px 1fr;
+        }
+    }
+    </style>
+    """,
     unsafe_allow_html=True,
 )
 
@@ -287,44 +293,42 @@ st.markdown(
 # =========================================================
 
 st.markdown(
-    """<div class="main-title">🩷 전국 고령화 지도 🩷</div>""",
+    '<div class="main-title">🩷 전국 고령화 지도 🩷</div>',
     unsafe_allow_html=True,
 )
 
 st.markdown(
-    """<div class="sub-title">우리나라 시군구별 65세 이상 인구 비율을 한눈에 살펴봐요 ♡</div>""",
+    '<div class="sub-title">우리나라 시군구별 65세 이상 인구 비율을 한눈에 살펴봐요 ♡</div>',
     unsafe_allow_html=True,
 )
 
 
 # =========================================================
-# 4. 먼작귀 친구들 장식
+# 4. 장식 카드
 # =========================================================
 
 st.markdown(
     """
-<div class="friends">
+    <div class="friends">
+        <div class="friend-card chiikawa">
+            <div class="friend-emoji">🐱</div>
+            <h3>치이카와</h3>
+            <p>오늘도 함께 알아봐요 ♡</p>
+        </div>
 
-<div class="friend-card chiikawa">
-<div class="friend-emoji">🐱</div>
-<h3>치이카와</h3>
-<p>오늘도 함께 알아봐요 ♡</p>
-</div>
+        <div class="friend-card hachiware">
+            <div class="friend-emoji">♡</div>
+            <h3>하치와레</h3>
+            <p>우리나라의 고령화 현황!</p>
+        </div>
 
-<div class="friend-card hachiware">
-<div class="friend-emoji">♡</div>
-<h3>하치와레</h3>
-<p>우리나라의 고령화 현황!</p>
-</div>
-
-<div class="friend-card usagi">
-<div class="friend-emoji">🐱</div>
-<h3>우사기</h3>
-<p>꼼꼼하게 확인해보자!</p>
-</div>
-
-</div>
-""",
+        <div class="friend-card usagi">
+            <div class="friend-emoji">🐱</div>
+            <h3>우사기</h3>
+            <p>꼼꼼하게 확인해보자!</p>
+        </div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
@@ -345,17 +349,15 @@ GEOJSON_URL = (
 
 
 # =========================================================
-# 6. 인구 데이터 불러오기
+# 6. 데이터 불러오기
 # =========================================================
 
 @st.cache_data
 def load_population():
-    """전국 읍면동별 연령별 인구 데이터를 불러옵니다."""
     response = requests.get(
         POPULATION_URL,
         timeout=60,
     )
-
     response.raise_for_status()
 
     return pd.read_csv(
@@ -365,31 +367,20 @@ def load_population():
     )
 
 
-# =========================================================
-# 7. 지도 경계 데이터 불러오기
-# =========================================================
-
 @st.cache_data
 def load_geojson():
-    """전국 시군구 경계 GeoJSON을 불러옵니다."""
     response = requests.get(
         GEOJSON_URL,
         timeout=60,
     )
-
     response.raise_for_status()
 
     return response.json()
 
 
-# =========================================================
-# 8. 데이터 불러오기
-# =========================================================
-
 try:
     population_df = load_population()
     geojson = load_geojson()
-
 except Exception as e:
     st.error("데이터를 불러오는 중 오류가 발생했습니다.")
     st.code(str(e))
@@ -397,7 +388,7 @@ except Exception as e:
 
 
 # =========================================================
-# 9. 최신 연도 찾기
+# 7. 기본 데이터 정리
 # =========================================================
 
 population_df["연도"] = pd.to_numeric(
@@ -409,27 +400,16 @@ latest_year = int(
     population_df["연도"].dropna().max()
 )
 
-
-# =========================================================
-# 10. 행정구역 코드 정리
-# =========================================================
-
 population_df["코드"] = (
     population_df["코드"]
     .astype("string")
     .str.strip()
 )
 
-# 읍면동 코드의 앞 5자리가 시군구 코드입니다.
 population_df["시군구코드"] = (
     population_df["코드"]
     .str[:5]
 )
-
-
-# =========================================================
-# 11. 최신 연도 데이터만 사용
-# =========================================================
 
 latest_df = population_df[
     population_df["연도"] == latest_year
@@ -437,7 +417,7 @@ latest_df = population_df[
 
 
 # =========================================================
-# 12. 전체 연령 인구 계산
+# 8. 전체 인구 계산
 # =========================================================
 
 total_age_columns = [
@@ -458,7 +438,7 @@ latest_df["전체인구"] = latest_df[
 
 
 # =========================================================
-# 13. 65세 이상 인구 계산
+# 9. 65세 이상 인구 계산
 # =========================================================
 
 elderly_columns = []
@@ -470,9 +450,7 @@ for age in range(65, 100):
         elderly_columns.append(column_name)
 
 if "계_100세 이상" in latest_df.columns:
-    elderly_columns.append(
-        "계_100세 이상"
-    )
+    elderly_columns.append("계_100세 이상")
 
 latest_df["65세이상인구"] = latest_df[
     elderly_columns
@@ -480,7 +458,7 @@ latest_df["65세이상인구"] = latest_df[
 
 
 # =========================================================
-# 14. 시군구별 합산
+# 10. 시군구별 집계
 # =========================================================
 
 grouped = (
@@ -494,11 +472,6 @@ grouped = (
         고령인구=("65세이상인구", "sum"),
     )
 )
-
-
-# =========================================================
-# 15. 시군구 이름과 시도 연결
-# =========================================================
 
 region_info = (
     latest_df[
@@ -518,11 +491,6 @@ grouped = grouped.merge(
     on="시군구코드",
     how="left",
 )
-
-
-# =========================================================
-# 16. 고령화율 계산
-# =========================================================
 
 grouped["고령화율"] = np.where(
     grouped["전체인구"] > 0,
@@ -545,11 +513,10 @@ grouped["시군구코드"] = (
 
 
 # =========================================================
-# 17. 고령화율 등급
+# 11. 고령화율 등급
 # =========================================================
 
 def get_grade(rate):
-
     if pd.isna(rate):
         return 0
 
@@ -574,14 +541,13 @@ grouped["등급"] = grouped[
 
 
 # =========================================================
-# 18. 지도용 GeoJSON 만들기
+# 12. 지도용 GeoJSON 만들기
 # =========================================================
 
 def make_map_geojson(
     original_geojson,
     region_data,
 ):
-
     result = {
         "type": "FeatureCollection",
         "features": [],
@@ -608,23 +574,17 @@ def make_map_geojson(
             ),
         }
 
-    for feature in original_geojson[
-        "features"
-    ]:
+    for feature in original_geojson["features"]:
 
         properties = feature.get(
             "properties",
             {},
         )
 
-        code = properties.get(
-            "코드"
-        )
+        code = properties.get("코드")
 
         if code is None:
-            code = properties.get(
-                "code"
-            )
+            code = properties.get("code")
 
         if code is None:
             continue
@@ -641,23 +601,13 @@ def make_map_geojson(
         result["features"].append(
             {
                 "type": feature["type"],
-                "geometry": feature[
-                    "geometry"
-                ],
+                "geometry": feature["geometry"],
                 "properties": {
                     "코드": code,
-                    "시군구": data_dict[
-                        code
-                    ]["시군구"],
-                    "시도": data_dict[
-                        code
-                    ]["시도"],
-                    "고령화율": data_dict[
-                        code
-                    ]["고령화율"],
-                    "등급": data_dict[
-                        code
-                    ]["등급"],
+                    "시군구": data_dict[code]["시군구"],
+                    "시도": data_dict[code]["시도"],
+                    "고령화율": data_dict[code]["고령화율"],
+                    "등급": data_dict[code]["등급"],
                 },
             }
         )
@@ -672,7 +622,7 @@ map_geojson = make_map_geojson(
 
 
 # =========================================================
-# 19. 지도 색상
+# 13. 지도 색상
 # =========================================================
 
 MAP_COLORS = [
@@ -683,17 +633,25 @@ MAP_COLORS = [
     "#D84D80",
 ]
 
-
-# =========================================================
-# 20. 지도 HTML
-# =========================================================
-
 geojson_text = json.dumps(
     map_geojson,
     ensure_ascii=False,
 )
 
-map_html = f"""
+colors_text = json.dumps(
+    MAP_COLORS,
+    ensure_ascii=False,
+)
+
+
+# =========================================================
+# 14. 지도 HTML
+# =========================================================
+# 중요:
+# 이 부분에서는 f-string을 사용하지 않습니다.
+# 따라서 JavaScript의 { }와 Python f-string이 충돌하지 않습니다.
+
+map_html = """
 <!DOCTYPE html>
 <html>
 
@@ -709,55 +667,55 @@ map_html = f"""
 <style>
 
 html,
-body {{
+body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-}}
+}
 
-#map {{
+#map {
     width: 100%;
     height: 670px;
     border-radius: 22px;
     border: 3px solid #ffd8e6;
     box-shadow: 0 6px 20px rgba(180, 90, 125, 0.12);
-}}
+}
 
-.leaflet-container {{
+.leaflet-container {
     font-family: Arial, sans-serif;
     background: #fffafd;
-}}
+}
 
-.legend {{
+.legend {
     background: white;
     padding: 12px 14px;
     border-radius: 15px;
     box-shadow: 0 3px 12px rgba(150, 80, 110, 0.18);
     border: 1px solid #ffd5e4;
     color: #70485a;
-}}
+}
 
-.legend-title {{
+.legend-title {
     font-weight: bold;
     margin-bottom: 8px;
     color: #9b4567;
-}}
+}
 
-.legend-item {{
+.legend-item {
     display: flex;
     align-items: center;
     margin: 5px 0;
     font-size: 12px;
-}}
+}
 
-.legend-color {{
+.legend-color {
     width: 19px;
     height: 19px;
     border-radius: 5px;
     margin-right: 7px;
-    border: 1px solid rgba(100,100,100,0.15);
-}}
+    border: 1px solid rgba(100, 100, 100, 0.15);
+}
 
 </style>
 
@@ -774,10 +732,10 @@ body {{
 
 <script>
 
-const map = L.map("map", {{
+const map = L.map("map", {
     zoomControl: true,
     scrollWheelZoom: true
-}});
+});
 
 
 map.setView(
@@ -787,11 +745,11 @@ map.setView(
 
 
 const geojsonData =
-    {geojson_text};
+    __GEOJSON_DATA__;
 
 
 const colors =
-    {json.dumps(MAP_COLORS)};
+    __COLORS__;
 
 
 const labels = [
@@ -803,19 +761,19 @@ const labels = [
 ];
 
 
-function getColor(grade) {{
+function getColor(grade) {
 
     return (
         colors[grade]
         || "#eeeeee"
     );
 
-}}
+}
 
 
-function style(feature) {{
+function style(feature) {
 
-    return {{
+    return {
 
         fillColor:
             getColor(
@@ -830,15 +788,15 @@ function style(feature) {{
 
         fillOpacity: 0.82
 
-    }};
+    };
 
-}}
+}
 
 
 function onEachFeature(
     feature,
     layer
-) {{
+) {
 
     const p =
         feature.properties;
@@ -860,19 +818,19 @@ function onEachFeature(
 
     layer.bindTooltip(
         tooltipText,
-        {{
+        {
             sticky: true,
             direction: "top"
-        }}
+        }
     );
 
 
-    layer.on({{
+    layer.on({
 
         mouseover:
-            function(e) {{
+            function(e) {
 
-                e.target.setStyle({{
+                e.target.setStyle({
 
                     weight: 3,
 
@@ -880,17 +838,17 @@ function onEachFeature(
 
                     fillOpacity: 1
 
-                }});
+                });
 
                 e.target.bringToFront();
 
-            }},
+            },
 
 
         mouseout:
-            function(e) {{
+            function(e) {
 
-                e.target.setStyle({{
+                e.target.setStyle({
 
                     weight: 1,
 
@@ -898,23 +856,23 @@ function onEachFeature(
 
                     fillOpacity: 0.82
 
-                }});
+                });
 
-            }}
+            }
 
-    }});
+    });
 
-}}
+}
 
 
 const geoLayer =
     L.geoJSON(
         geojsonData,
-        {{
+        {
             style: style,
             onEachFeature:
                 onEachFeature
-        }}
+        }
     ).addTo(map);
 
 
@@ -922,30 +880,30 @@ if (
     geoLayer
         .getBounds()
         .isValid()
-) {{
+) {
 
     map.fitBounds(
         geoLayer.getBounds(),
-        {{
+        {
             padding: [
                 15,
                 15
             ]
-        }}
+        }
     );
 
-}}
+}
 
 
 const legend =
-    L.control({{
+    L.control({
         position:
             "bottomright"
-    }});
+    });
 
 
 legend.onAdd =
-    function() {{
+    function() {
 
         const div =
             L.DomUtil.create(
@@ -962,7 +920,7 @@ legend.onAdd =
             let i = 0;
             i < colors.length;
             i++
-        ) {{
+        ) {
 
             div.innerHTML +=
 
@@ -974,7 +932,7 @@ legend.onAdd =
                 + labels[i]
                 + '</div>';
 
-        }}
+        }
 
 
         return div;
@@ -992,8 +950,19 @@ legend.addTo(map);
 """
 
 
+map_html = map_html.replace(
+    "__GEOJSON_DATA__",
+    geojson_text,
+)
+
+map_html = map_html.replace(
+    "__COLORS__",
+    colors_text,
+)
+
+
 # =========================================================
-# 21. 지도 표시
+# 15. 지도 표시
 # =========================================================
 
 st.markdown(
@@ -1010,8 +979,8 @@ st.markdown(
 <b>65세 이상 인구가 차지하는 비율</b>을
 색으로 나타낸 지도예요.
 <br>
-지역을 마우스로 올리면
-시군구 이름과 고령화율을 확인할 수 있어요 ♡
+지역을 마우스로 올리면 시군구 이름과
+고령화율을 확인할 수 있어요 ♡
 </div>
 </div>
 """,
@@ -1026,7 +995,7 @@ components.html(
 
 
 # =========================================================
-# 22. 전체 현황
+# 16. 전체 현황
 # =========================================================
 
 st.markdown(
@@ -1040,17 +1009,11 @@ total_regions = len(
 
 valid_regions = len(grouped)
 
-max_rate = grouped[
-    "고령화율"
-].max()
+max_rate = grouped["고령화율"].max()
 
-min_rate = grouped[
-    "고령화율"
-].min()
-
+min_rate = grouped["고령화율"].min()
 
 col1, col2, col3, col4 = st.columns(4)
-
 
 metric_items = [
     (
@@ -1075,7 +1038,6 @@ metric_items = [
     ),
 ]
 
-
 for column, title, value in metric_items:
 
     with column:
@@ -1092,7 +1054,7 @@ for column, title, value in metric_items:
 
 
 # =========================================================
-# 23. 인구 피라미드
+# 17. 인구 피라미드
 # =========================================================
 
 st.markdown(
@@ -1105,9 +1067,8 @@ st.markdown(
 <div class="info-box">
 <div class="info-box-title">♡ 연령별·성별 인구 구조를 확인해보세요</div>
 <div class="info-box-text">
-아래에서 지역을 선택하면
-남성과 여성의 연령대별 인구를 한눈에 비교할 수 있어요.
-가운데 나이대를 기준으로
+지역을 선택하면 남성과 여성의 연령대별 인구를
+피라미드 형태로 비교할 수 있어요.
 왼쪽은 남성, 오른쪽은 여성을 나타냅니다.
 </div>
 </div>
@@ -1117,15 +1078,11 @@ st.markdown(
 
 
 # =========================================================
-# 24. 지역 선택
+# 18. 지역 선택
 # =========================================================
 
-region_options = [
-    "전국"
-]
-
+region_options = ["전국"]
 region_to_code = {}
-
 
 region_list = (
     grouped[
@@ -1144,7 +1101,6 @@ region_list = (
     )
 )
 
-
 for _, row in region_list.iterrows():
 
     label = (
@@ -1152,101 +1108,81 @@ for _, row in region_list.iterrows():
         f"{row['시군구']}"
     )
 
-    region_options.append(
-        label
-    )
+    region_options.append(label)
 
     region_to_code[label] = str(
         row["시군구코드"]
     )
 
-
 selected_region = st.selectbox(
     "지역 선택",
     region_options,
-    index=0,
 )
 
 
 if selected_region == "전국":
 
-    pyramid_source = latest_df
+    pyramid_source = latest_df.copy()
 
 else:
 
-    selected_code = (
-        region_to_code[
-            selected_region
-        ]
-    )
+    selected_code = region_to_code[
+        selected_region
+    ]
 
     pyramid_source = latest_df[
         latest_df["시군구코드"]
         == selected_code
-    ]
+    ].copy()
 
 
 # =========================================================
-# 25. 연령대 설정
+# 19. 연령대별 데이터
 # =========================================================
 
 age_groups = [
-
     (
         "0~9세",
         list(range(0, 10)),
     ),
-
     (
         "10~19세",
         list(range(10, 20)),
     ),
-
     (
         "20~29세",
         list(range(20, 30)),
     ),
-
     (
         "30~39세",
         list(range(30, 40)),
     ),
-
     (
         "40~49세",
         list(range(40, 50)),
     ),
-
     (
         "50~59세",
         list(range(50, 60)),
     ),
-
     (
         "60~69세",
         list(range(60, 70)),
     ),
-
     (
         "70~79세",
         list(range(70, 80)),
     ),
-
     (
         "80세 이상",
-        list(range(80, 100)),
+        list(range(80, 101)),
     ),
-
 ]
 
 
-# =========================================================
-# 26. 남녀 연령별 인구 계산
-# =========================================================
-
-def sum_age_columns(
+def sum_gender_age_columns(
     source,
-    prefix,
+    gender,
     ages,
 ):
 
@@ -1254,44 +1190,27 @@ def sum_age_columns(
 
     for age in ages:
 
-        column = (
-            f"{prefix}_{age}세"
-        )
+        if age == 100:
 
-        if column in source.columns:
-
-            columns.append(
-                column
+            column_name = (
+                f"{gender}_100세 이상"
             )
 
+        else:
 
-    if (
-        prefix == "남"
-        and "남_100세 이상"
-        in source.columns
-        and ages[-1] >= 80
-    ):
+            column_name = (
+                f"{gender}_{age}세"
+            )
 
-        columns.append(
-            "남_100세 이상"
-        )
+        if column_name in source.columns:
 
-
-    if (
-        prefix == "여"
-        and "여_100세 이상"
-        in source.columns
-        and ages[-1] >= 80
-    ):
-
-        columns.append(
-            "여_100세 이상"
-        )
-
+            columns.append(
+                column_name
+            )
 
     if not columns:
-        return 0
 
+        return 0
 
     values = (
         source[columns]
@@ -1302,7 +1221,6 @@ def sum_age_columns(
         .fillna(0)
     )
 
-
     return int(
         values
         .sum()
@@ -1312,16 +1230,15 @@ def sum_age_columns(
 
 pyramid_rows = []
 
-
 for age_label, ages in age_groups:
 
-    male = sum_age_columns(
+    male = sum_gender_age_columns(
         pyramid_source,
         "남",
         ages,
     )
 
-    female = sum_age_columns(
+    female = sum_gender_age_columns(
         pyramid_source,
         "여",
         ages,
@@ -1342,14 +1259,18 @@ max_population = max(
             male,
             female,
         )
-        for _, male, female
-        in pyramid_rows
-    ] + [1]
+        for (
+            _,
+            male,
+            female,
+        ) in pyramid_rows
+    ]
+    + [1]
 )
 
 
 # =========================================================
-# 27. 인구 피라미드 HTML 만들기
+# 20. 인구 피라미드 표시
 # =========================================================
 
 pyramid_html = """
@@ -1381,44 +1302,19 @@ for (
         * 100
     )
 
-    pyramid_html += f"""
-<div class="pyramid-row">
-
-<div class="pyramid-side male-side">
-
-<div class="pyramid-number">
-{male:,}명
-</div>
-
-<div
-    class="male-bar"
-    style="width:{male_width:.1f}%"
-></div>
-
-</div>
-
-
-<div class="pyramid-age">
-{age_label}
-</div>
-
-
-<div class="pyramid-side female-side">
-
-<div
-    class="female-bar"
-    style="width:{female_width:.1f}%"
-></div>
-
-<div class="pyramid-number">
-{female:,}명
-</div>
-
-</div>
-
-</div>
-"""
-
+    pyramid_html += (
+        '<div class="pyramid-row">'
+        '<div class="pyramid-side male-side">'
+        f'<div class="pyramid-number">{male:,}명</div>'
+        f'<div class="male-bar" style="width:{male_width:.1f}%"></div>'
+        '</div>'
+        f'<div class="pyramid-age">{age_label}</div>'
+        '<div class="pyramid-side female-side">'
+        f'<div class="female-bar" style="width:{female_width:.1f}%"></div>'
+        f'<div class="pyramid-number">{female:,}명</div>'
+        '</div>'
+        '</div>'
+    )
 
 pyramid_html += """
 <div class="pyramid-footer">
@@ -1428,7 +1324,6 @@ pyramid_html += """
 </div>
 """
 
-
 st.markdown(
     pyramid_html,
     unsafe_allow_html=True,
@@ -1436,33 +1331,33 @@ st.markdown(
 
 
 # =========================================================
-# 28. 선택 지역의 추가 지표
+# 21. 선택 지역 추가 지표
 # =========================================================
 
 selected_total = int(
-    pyramid_source["전체인구"]
-    .sum()
+    pyramid_source[
+        "전체인구"
+    ].sum()
 )
 
 selected_elderly = int(
     pyramid_source[
         "65세이상인구"
-    ]
-    .sum()
+    ].sum()
 )
 
 
-# 15~64세 생산연령인구
+# 15~64세 인구
 working_columns = []
 
 for age in range(15, 65):
 
-    column = f"계_{age}세"
+    column_name = f"계_{age}세"
 
-    if column in pyramid_source.columns:
+    if column_name in pyramid_source.columns:
 
         working_columns.append(
-            column
+            column_name
         )
 
 
@@ -1486,26 +1381,30 @@ else:
     selected_working = 0
 
 
-selected_aging_rate = (
+if selected_total > 0:
 
-    selected_elderly
-    / selected_total
-    * 100
+    selected_aging_rate = (
+        selected_elderly
+        / selected_total
+        * 100
+    )
 
-    if selected_total > 0
-    else 0
-)
+else:
+
+    selected_aging_rate = 0
 
 
-selected_dependency = (
+if selected_working > 0:
 
-    selected_elderly
-    / selected_working
-    * 100
+    selected_dependency = (
+        selected_elderly
+        / selected_working
+        * 100
+    )
 
-    if selected_working > 0
-    else 0
-)
+else:
+
+    selected_dependency = 0
 
 
 st.markdown(
@@ -1513,32 +1412,25 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-
 pcol1, pcol2, pcol3 = st.columns(3)
 
-
 selected_metrics = [
-
     (
         pcol1,
         "선택 지역 총인구",
         f"{selected_total:,}명",
     ),
-
     (
         pcol2,
         "고령화율",
         f"{selected_aging_rate:.2f}%",
     ),
-
     (
         pcol3,
         "노년부양비",
         f"{selected_dependency:.2f}",
     ),
-
 ]
-
 
 for column, title, value in selected_metrics:
 
@@ -1556,14 +1448,13 @@ for column, title, value in selected_metrics:
 
 
 # =========================================================
-# 29. 지역별 비교표
+# 22. 지역별 비교
 # =========================================================
 
 st.markdown(
     '<div class="section-title">🔎 지역별 고령화율 비교</div>',
     unsafe_allow_html=True,
 )
-
 
 top10 = (
     grouped
@@ -1574,7 +1465,6 @@ top10 = (
     .head(10)
     .copy()
 )
-
 
 bottom10 = (
     grouped
@@ -1629,16 +1519,20 @@ bottom10_table.columns = [
 
 top10_table[
     "고령화율(%)"
-] = top10_table[
-    "고령화율(%)"
-].round(2)
+] = (
+    top10_table[
+        "고령화율(%)"
+    ].round(2)
+)
 
 
 bottom10_table[
     "고령화율(%)"
-] = bottom10_table[
-    "고령화율(%)"
-].round(2)
+] = (
+    bottom10_table[
+        "고령화율(%)"
+    ].round(2)
+)
 
 
 left, right = st.columns(2)
@@ -1673,7 +1567,7 @@ with right:
 
 
 # =========================================================
-# 30. 계산 방법
+# 23. 계산 방법
 # =========================================================
 
 st.markdown(
@@ -1692,6 +1586,14 @@ st.markdown(
 
 <br><br>
 
+노년부양비
+=
+<b>
+65세 이상 인구 ÷ 15~64세 인구 × 100
+</b>
+
+<br><br>
+
 <span style="font-size:13px;">
 ※ 인구 데이터는 읍·면·동 단위 자료를
 시군구 코드 기준으로 합산하여 계산했습니다.
@@ -1704,7 +1606,7 @@ st.markdown(
 
 
 # =========================================================
-# 31. 하단 문구
+# 24. 하단
 # =========================================================
 
 st.markdown(
@@ -1715,9 +1617,7 @@ color:#b08094;
 margin-top:28px;
 font-size:13px;
 ">
-
 🐱 ♡ 우리나라의 인구 구조를 재미있게 살펴봐요 ♡ 🐱
-
 </div>
 """,
     unsafe_allow_html=True,
